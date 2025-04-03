@@ -1,8 +1,25 @@
-import { AuthProvider } from "@/context/AuthContext";
+import { AuthProvider, useAuth } from "@/context/AuthContext";
 import { COLORS } from "@/utils/colors";
-import { Stack } from "expo-router";
+import { Stack, useRouter, useSegments } from "expo-router";
+import { useEffect } from "react";
 
 export default function RootLayout() {
+  const {token, initialized} = useAuth();
+  const router = useRouter();
+  const segments = useSegments();
+
+  useEffect(() => {
+    if (!initialized) return;
+
+    const inAuthGroup = segments[0] === '(authenticated)';
+    console.log('inauthgroup:' , inAuthGroup)
+
+    if (token && !inAuthGroup) {
+      router.replace('/(authenticated)/(tabs)/messages')
+    }
+  }, [initialized, token])
+
+
   return (
     <AuthProvider>
       <Stack
