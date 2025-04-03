@@ -1,10 +1,11 @@
-import { ActivityIndicator, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Alert, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { COLORS } from '@/utils/colors';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useRouter } from 'expo-router';
+import { useAuth } from '@/context/AuthContext';
 
 
 //create schema with zod to use for form and validation
@@ -23,10 +24,11 @@ type FormData = z.infer<typeof schema>;
 const Page = () => {
     const [loading, setLoading] = useState(false);
     const router = useRouter();
+    const { onRegister } = useAuth();
 
 
     //form setup with useForm hook and zod validation
-    const { control, handleSubmit, trigger, formState: {errors} } = useForm({
+    const { control, handleSubmit, trigger, formState: { errors } } = useForm({
         resolver: zodResolver(schema),
         defaultValues: {
             name: 'Tester',
@@ -37,21 +39,21 @@ const Page = () => {
     });
 
     //initial submit handle
-    const onSubmit = (data: any) => {
-        console.log(data);
+    const onSubmit = async (data: any) => {
         setLoading(true); // set loading to true after submitting
-
-        //setting a timeout to simulate a call
-        setTimeout(() => {
-            setLoading(false); //set loading back to false when done
-            router.push('/'); //push to index
-        }, 2000)
+        const result = await onRegister!(data.email, data.password, data.name);
+        if (result && result.error) {
+            Alert.alert('Error', result.msg);
+        } else {
+            router.back();
+        }
+        setLoading(false);
     };
 
     return (
         <View style={styles.container}>
             {/* keyboardAvoidingView adjusts layout when keyboard appears */}
-            <KeyboardAvoidingView behavior='padding' style={{ flex: 1, justifyContent:'center' }}>
+            <KeyboardAvoidingView behavior='padding' style={{ flex: 1, justifyContent: 'center' }}>
 
 
                 {/* controller for name form input */}
@@ -96,8 +98,8 @@ const Page = () => {
                     )}
                 />
 
-                 {/* controller for password form input */}
-                 <Controller
+                {/* controller for password form input */}
+                <Controller
                     control={control}
                     name='password'
                     render={({ field: { onChange, onBlur, value } }) => (
@@ -119,9 +121,9 @@ const Page = () => {
                     )}
                 />
                 {/* submit button - disabled when validation errors exist */}
-                <TouchableOpacity style={[styles.button, 
-                    !errors.email && !errors.password ? {} : styles.buttonDisabled]} 
-                    disabled={!!errors.email || !! errors.password}
+                <TouchableOpacity style={[styles.button,
+                !errors.email && !errors.password ? {} : styles.buttonDisabled]}
+                    disabled={!!errors.email || !!errors.password}
                     onPress={handleSubmit(onSubmit)}>
                     <Text style={styles.buttonText}>Sign up</Text>
                 </TouchableOpacity>
@@ -129,7 +131,7 @@ const Page = () => {
             {/* loading overlay - shown during form submission */}
             {loading && (
                 <View style={styles.loadingOverlay}>
-                    <ActivityIndicator size={'large'} color={'#fff'}/>
+                    <ActivityIndicator size={'large'} color={'#fff'} />
                 </View>
             )}
         </View>
@@ -170,7 +172,7 @@ const styles = StyleSheet.create({
         fontWeight: '600',
     },
     errorText: {
-        color:"#ff6b6b",
+        color: "#ff6b6b",
         marginTop: 4,
         marginLeft: 4,
         fontSize: 12,

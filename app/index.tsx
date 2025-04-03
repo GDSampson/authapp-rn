@@ -1,10 +1,11 @@
-import { Text, View, StyleSheet, TouchableOpacity, Image, KeyboardAvoidingView, ActivityIndicator, TextInput } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, Image, KeyboardAvoidingView, ActivityIndicator, TextInput, Alert } from "react-native";
 import React, { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { COLORS } from '@/utils/colors';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Link, useRouter } from 'expo-router';
+import { useAuth } from "@/context/AuthContext";
 
 
 //create schema with zod to use for form and validation
@@ -21,7 +22,7 @@ type FormData = z.infer<typeof schema>;
 export default function Index() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-
+  const { onLogin } = useAuth();
 
   //form setup with useForm hook and zod validation
   const { control, handleSubmit, trigger, formState: { errors } } = useForm({
@@ -34,15 +35,15 @@ export default function Index() {
   });
 
   //initial submit handle
-  const onSubmit = (data: any) => {
-    console.log(data);
+  const onSubmit = async (data: any) => {
     setLoading(true); // set loading to true after submitting
-
-    //setting a timeout to simulate a call
-    setTimeout(() => {
-      setLoading(false); //set loading back to false when done
-      router.push('/'); //push to index
-    }, 2000)
+    const result = await onLogin!(data.email, data.password);
+    if (result && result.error) {
+      Alert.alert('Error', result.msg);
+    } else {
+      router.back();
+    }
+    setLoading(false);
   };
 
 
@@ -125,7 +126,7 @@ export default function Index() {
 
         {/* button for fake policy page */}
         <Link href={'/privacy'} asChild>
-          <TouchableOpacity style={{alignItems: 'center', paddingTop: 5}}>
+          <TouchableOpacity style={{ alignItems: 'center', paddingTop: 5 }}>
             <Text style={styles.outlineButtonText}>
               Privacy Policy
             </Text>
@@ -174,7 +175,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     overflow: 'hidden',
     marginBottom: 20,
-    
+
   },
   header: {
     fontSize: 40,
