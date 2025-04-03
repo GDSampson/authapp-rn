@@ -28,7 +28,7 @@ export default function Index() {
   const { control, handleSubmit, trigger, formState: { errors } } = useForm({
     resolver: zodResolver(schema),
     defaultValues: {
-      email: 'a@example.com',
+      email: 'a@a.com',
       password: '123456',
     },
     mode: 'onChange', // will validate on field change
@@ -53,7 +53,7 @@ export default function Index() {
       <KeyboardAvoidingView behavior='padding' style={{ flex: 1, justifyContent: 'center' }}>
 
         <Image
-          source={require('../assets/images/FF.png')}
+          source={require('../../assets/images/FF.png')}
           style={styles.image}
         />
 
