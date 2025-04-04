@@ -195,6 +195,8 @@ const styles = StyleSheet.create({
     messageText: {
         fontSize: 16,
         lineHeight: 24,
+        // using the setup font
+        fontFamily: 'Inter_400Regular',
     },
     controls: {
         flexDirection: 'row',
