@@ -12,6 +12,7 @@ const Layout = () => {
             },
         }}>
             <Stack.Screen name='index' options={{ title: 'Messages' }} />
+            <Stack.Screen name='[id]' options={{ title: '' }} />
         </Stack>
     )
 }

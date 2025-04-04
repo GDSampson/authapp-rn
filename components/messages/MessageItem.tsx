@@ -11,7 +11,7 @@ interface MessageItemProps {
 const MessageItem = ({ message }: MessageItemProps) => {
     return (
         // link wrapper with asChild to make touchable work as navigation
-        <Link href={`/`} style={styles.container} asChild>
+        <Link href={`/(app)/(authenticated)/(tabs)/messages/${message.id}`} style={styles.container} asChild>
             <TouchableOpacity>
                 {/* container for message content and date */}
                 <View style={styles.content}>
