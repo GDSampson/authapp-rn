@@ -18,11 +18,22 @@ const TabLayout = () => {
         backgroundColor: COLORS.background,
       },
     }}>
-      <Tabs.Screen name='messages' options={{tabBarLabel: 'Message',
-        tabBarIcon: ({color, size}) => <FontAwesome6 name='message' size={size} color={color}/>
+      <Tabs.Screen 
+        name='messages' 
+        options={{
+          tabBarLabel: 'Message',
+          headerShown: false,
+          tabBarIcon: ({color, size}) => (
+            <FontAwesome6 name='message' size={size} color={color}/>
+          ),
       }} />
-      <Tabs.Screen name='profile' options={{tabBarLabel: 'Profile',
-        tabBarIcon: ({color, size}) => <FontAwesome6 name='user' size={size} color={color}/>
+      <Tabs.Screen 
+        name='profile' 
+        options={{
+          tabBarLabel: 'Profile',
+          tabBarIcon: ({color, size}) => (
+          <FontAwesome6 name='user' size={size} color={color}/>
+          ),
       }}/>
     </Tabs>
   )
