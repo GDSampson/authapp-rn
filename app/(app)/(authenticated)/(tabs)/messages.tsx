@@ -1,12 +1,13 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import Fab from '@/components/fab/fab'
 import { useQuery } from '@tanstack/react-query'
 import { fetchMessages } from '@/utils/api'
 import { ErrorState } from '@/components/common/ErrorState'
+import { COLORS } from '@/utils/colors'
 
 const Page = () => {
-  const {data: messages, isLoading, isError, refetch} = useQuery({
+  const {data: messages, isLoading, isError,isPending, refetch} = useQuery({
     queryKey: ['messages'],
     queryFn: () => fetchMessages(),
   })
@@ -17,10 +18,11 @@ const Page = () => {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={messages?.data}
-        renderItem={({item}) => <Text>{item.content}</Text>}
-      />
+      {isPending ? (
+        <ActivityIndicator size={'large'} color={COLORS.primary}/>
+      ) : (
+        <FlatList data={messages?.data} renderItem={({item}) => <Text>{item.content}</Text>}/>
+      )}
       <Fab/>
     </View>
   )
