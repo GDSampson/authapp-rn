@@ -4,6 +4,8 @@ import { Slot } from 'expo-router'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Inter_900Black, useFonts, Inter_400Regular } from '@expo-google-fonts/inter';
 import * as SplashScreen from 'expo-splash-screen';
+import { useColorScheme } from 'react-native';
+import { ThemeProvider, DefaultTheme, DarkTheme } from '@react-navigation/native';
 
 //keep the splash screen until I tell the app to hide it
 SplashScreen.preventAutoHideAsync();
@@ -23,6 +25,9 @@ let [fonstLoaded] = useFonts({
   Inter_400Regular,
 })
 
+const colorScheme = useColorScheme();
+console.log(colorScheme)
+
 // hide the splash screen once fonts are loaded
 useEffect(() =>{
   if (fonstLoaded) {
@@ -37,11 +42,14 @@ if (!fonstLoaded) {
 }
 
   return (
-    <AuthProvider>
-       <QueryClientProvider client={queryClient}>
-          <Slot />
-        </QueryClientProvider>
-    </AuthProvider>
+    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+
+      <AuthProvider>
+        <QueryClientProvider client={queryClient}>
+            <Slot />
+          </QueryClientProvider>
+      </AuthProvider>
+    </ThemeProvider>
   )
 }
 

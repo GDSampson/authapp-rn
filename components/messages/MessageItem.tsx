@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native'
 import React from 'react'
 import { Message } from '@/utils/api'
 import { Link } from 'expo-router';
@@ -9,16 +9,21 @@ interface MessageItemProps {
 }
 
 const MessageItem = ({ message }: MessageItemProps) => {
+    const coloroScheme = useColorScheme();
     return (
         // link wrapper with asChild to make touchable work as navigation
-        <Link href={`/(app)/(authenticated)/(tabs)/messages/${message.id}`} style={styles.container} asChild>
+        <Link 
+            href={`/(app)/(authenticated)/(tabs)/messages/${message.id}`} 
+            style={[styles.container,
+                {backgroundColor: coloroScheme === 'dark' ? '#111': '#fff'}
+            ]} asChild>
             <TouchableOpacity>
                 {/* container for message content and date */}
                 <View style={styles.content}>
                     {/* message text with single line truncation */}
-                    <Text style={styles.contentText} numberOfLines={1}>{message.content}</Text>
+                    <Text style={[styles.contentText, {color: coloroScheme === 'dark' ? '#fff': '#111'}]} numberOfLines={1}>{message.content}</Text>
                     {/* relative time display (e.g. "2 hours ago") */}
-                    <Text style={styles.date}>{formatDistanceToNow(new Date(message.createdAt), {addSuffix: true})}</Text>
+                    <Text style={[styles.date , {color: coloroScheme === 'dark' ? '#fff': '#111'}]}>{formatDistanceToNow(new Date(message.createdAt), {addSuffix: true})}</Text>
                 </View>
             </TouchableOpacity>
         </Link>
