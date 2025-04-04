@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import {jwtDecode} from 'jwt-decode';
 import * as SecureStore from 'expo-secure-store';
 import { loginUser, registerUser } from "@/utils/api";
+import axios from 'axios';
 
 // Key used for storing JWT in secure storage
 const JWT_KEY = 'jwt-key';
@@ -44,8 +45,6 @@ export const AuthProvider = ({children} : {children: React.ReactNode}) => {
         const loadToken = async () => {
             // Retrieve token from secure storage
             const storedToken = await SecureStore.getItemAsync(JWT_KEY);
-            console.log('storedToken: ' , storedToken);
-
             // If token exists, process it
             if(storedToken) {
                 processToken(storedToken);
@@ -65,6 +64,8 @@ export const AuthProvider = ({children} : {children: React.ReactNode}) => {
             setToken(token);
             // Set user ID from decoded token
             setUserId(decodedToken.id);
+            // include the token in the http header
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         } catch (error) {
             // Handle token decoding errors by logging out
             console.error('Error decoding token', error)
@@ -106,6 +107,7 @@ export const AuthProvider = ({children} : {children: React.ReactNode}) => {
         setToken(null);
         // Clear user ID state
         setUserId(null);
+        axios.defaults.headers.common['Authorization'] = '';
     }
 
     // Combine all auth-related data and functions into a context value object
