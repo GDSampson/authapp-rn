@@ -3,7 +3,7 @@ import { COLORS } from "@/utils/colors";
 import { Stack, useRouter, useSegments } from "expo-router";
 import { useEffect } from "react";
 
-export default function RootLayout() {
+export default function Layout() {
   const {token, initialized} = useAuth();
   const router = useRouter();
   const segments = useSegments();
