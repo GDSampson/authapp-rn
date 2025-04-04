@@ -22,7 +22,7 @@ type FormData = z.infer<typeof schema>;
 export default function Index() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { onLogin } = useAuth();
+  const { onLogin, initialized } = useAuth();
 
   //form setup with useForm hook and zod validation
   const { control, handleSubmit, trigger, formState: { errors } } = useForm({
@@ -41,7 +41,9 @@ export default function Index() {
     if (result && result.error) {
       Alert.alert('Error', result.msg);
     } else {
-      router.push('/');
+      if(initialized) {
+        router.push('/');
+      }
     }
     setLoading(false);
   };

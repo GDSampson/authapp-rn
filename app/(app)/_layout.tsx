@@ -19,7 +19,7 @@ export default function Layout() {
     } else if (!token && inAuthGroup) {
       router.replace('/')
     }
-  }, [initialized, token])
+  }, [initialized, token,segments])
 
 
   return (
