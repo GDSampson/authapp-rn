@@ -4,7 +4,7 @@ import { Tabs } from 'expo-router'
 import { COLORS } from '@/utils/colors'
 import {FontAwesome6 } from '@expo/vector-icons';
 
-const Layout = () => {
+const TabLayout = () => {
   return (
     <Tabs screenOptions={{
       tabBarStyle:{
@@ -14,6 +14,9 @@ const Layout = () => {
       tabBarActiveTintColor: '#fff',
       tabBarInactiveTintColor: '#666',
       headerTintColor: '#fff',
+      headerStyle: {
+        backgroundColor: COLORS.background,
+      },
     }}>
       <Tabs.Screen name='messages' options={{tabBarLabel: 'Message',
         tabBarIcon: ({color, size}) => <FontAwesome6 name='message' size={size} color={color}/>
@@ -25,6 +28,6 @@ const Layout = () => {
   )
 }
 
-export default Layout
+export default TabLayout
 
 const styles = StyleSheet.create({})
