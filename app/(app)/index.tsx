@@ -41,7 +41,7 @@ export default function Index() {
     if (result && result.error) {
       Alert.alert('Error', result.msg);
     } else {
-      router.back();
+      router.push('/');
     }
     setLoading(false);
   };
